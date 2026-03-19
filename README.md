@@ -33,37 +33,37 @@ To update either one, simply overwrite the existing file with your new version (
 
 ### Add a new publication
 
-Each paper lives in its own folder under `content/papers/`:
+All publications are stored in a single CSV spreadsheet at `assets/publications.csv`. The Publications page is generated automatically from this file at build time — no Markdown files are needed.
 
-```
-content/papers/
-└── my-paper/
-    ├── index.md        ← metadata + abstract + citation
-    └── my-paper.pdf    ← (optional) local copy of the paper
-```
+#### CSV columns
+
+| Column | Description |
+|---|---|
+| `year` | Four-digit publication year (used for grouping and sorting) |
+| `authors` | Author string exactly as it should appear on the page |
+| `title` | Paper title |
+| `venue` | Conference or journal name (rendered in italics) |
+| `paper_url` | URL for the **[Paper]** link — leave blank if none |
+| `artifacts_url` | URL for the **[Artifacts]** link — leave blank if none |
+| `code_url` | URL for the **[Code]** link — leave blank if none |
+| `models_url` | URL for the **[Models]** link — leave blank if none |
+| `slides_url` | URL for the **[Slides]** link — leave blank if none |
+| `talk_url` | URL for the **[Talk]** link — leave blank if none |
 
 **Steps:**
 
-1. Create a folder: `content/papers/my-paper/`
-2. Copy `archetypes/paper.md` into the folder and rename it `index.md`.
-3. Fill in the front-matter fields (`title`, `date`, `author`, `description`, `summary`, `tags`) and replace the placeholder body text with your abstract and citation.
-4. If you want to host the PDF yourself, place it in the same folder and update the download link in `index.md`. Otherwise link directly to arXiv/DOI.
+1. Open `assets/publications.csv`.
+2. Add a new row for the paper. Quote any field that contains a comma (e.g. the `authors` field).
+3. Leave URL columns empty for links that do not exist.
+4. Commit and push — the Publications page updates automatically on next build.
 
-Example front-matter for a new paper:
+Example row:
 
-```yaml
----
-title: "My New Paper"
-date: 2024-11-01
-tags: ["large language models", "evaluation"]
-author: ["Stella Biderman", "Co-Author Name"]
-description: "One-sentence description for search engines."
-summary: "Two-sentence summary shown on the Publications list page."
-editPost:
-    URL: "https://arxiv.org/abs/XXXX.XXXXX"
-    Text: "arXiv"
----
 ```
+2025,"Smith, Jones, and Biderman","My New Paper","International Conference on Machine Learning (ICML)",https://arxiv.org/abs/XXXX.XXXXX,,,,,
+```
+
+> **Note:** "Biderman" is automatically rendered in bold wherever it appears in the `authors` field. Authors with equal contribution are indicated with `*` directly in the author string (e.g. `Smith* and Jones*`).
 
 ### Add a new talk
 
