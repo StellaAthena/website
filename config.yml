@@ -12,15 +12,18 @@ taxonomies:
 
 menu:
     main:
+        - name: Bio
+          url: bio/
+          weight: 1
+        - name: Research
+          url: research/
+          weight: 2
         - name: Publications
           url: papers/
-          weight: 1
-        - name: News
-          url: news/
-          weight: 2
-        - name: Tags
-          url: tags/
           weight: 3
+        - name: Talks
+          url: talks/
+          weight: 4
 
 params:
     description: "Stella Biderman is a researcher focused on large language models, AI interpretability, and open-source AI development."
@@ -54,14 +57,14 @@ params:
           imageWidth: 160
           imageHeight: 160
           buttons:
+            - name: Bio
+              url: bio/
+            - name: Research
+              url: research/
             - name: Publications
               url: papers/
-            - name: News
-              url: news/
-            - name: Tags
-              url: tags/
-            - name: Archive
-              url: archive/
+            - name: Talks
+              url: talks/
 
     socialIcons:
         - name: CV
