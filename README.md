@@ -1,119 +1,112 @@
-# Minimalist Hugo Template for Academic Websites
+# Stella Biderman's Website
 
-This repository contains a [Hugo](https://github.com/gohugoio/hugo) template to create a personal academic website. The template uses the [PaperMod theme](https://github.com/adityatelange/hugo-PaperMod) but modifies it in various ways to be more minimalist and better suited for academic websites. The website is hosted on [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages).
+Source code for [stellabiderman.ai](https://stellabiderman.ai), built with [Hugo](https://gohugo.io) and the PaperMod theme.
 
-## Documentation
+## Repository layout
 
-The template is documented at https://pascalmichaillat.org/b/.
+```
+content/        ← Markdown pages (papers, talks, bio, research)
+static/         ← Files served directly (PDFs, images, favicon)
+assets/css/     ← Custom CSS overrides
+config.yml      ← Site-wide settings (title, nav, social links, etc.)
+archetypes/     ← Templates for new content entries
+```
 
-## Illustration
+## How to add files
 
-The website produced by the template can be viewed at https://pascalmichaillat.org/hugo-website/.
+### Replace your CV or profile photo
 
-## Installation
+These files live in `static/` and are referenced by name in `config.yml`:
 
-### On your local machine
+| File | Purpose |
+|------|---------|
+| `static/cv.pdf` | CV linked from the social-icon row on the home page |
+| `static/picture.jpeg` | Profile photo shown on the home page |
 
-- Install [Hugo](https://gohugo.io/installation/). On a Mac, this can be done with [Homebrew](https://brew.sh): run `brew install hugo` in the terminal. If you already have Hugo but it is outdated, run `brew upgrade hugo`.
-- Since the website is hosted on GitHub Pages, it is convenient to install [GitHub Desktop](https://desktop.github.com). The website can be updated from your local machine via GitHub Desktop without going to GitHub.
-- Clone the template repository to your local machine. This can be done in two steps:
-  - Click "Use this template" and then "Create a new repository" at the top of the repository.
-  - Once the new repository is created on your GitHub account, open GitHub Desktop and click "File" and then "Clone repository". Find the newly created repository under the "GitHub.com" tab and clone it.
-- Update the `baseURL` parameter in `config.yml` with the website URL that you plan to use. By default the URL is `https://username.github.io`.
+To update either one, simply overwrite the existing file with your new version (keeping the same filename), then commit and push.
 
-### On your GitHub account
+### Add a downloadable file (PDF, dataset, slides, …)
 
-- The first time that you push your repository to GitHub, you need to allow GitHub Actions and GitHub Pages so the website can be built and deployed to GitHub Pages.
-- The first step is to [ask GitHub to publish the website with a GitHub Action](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow). GitHub offers a ready-made action to publish a Hugo website, called `Deploy Hugo site to Pages`. This action must be enabled in the [Pages Settings](https://github.com/pmichaillat/hugo-website/settings/pages) of your GitHub repository. You can view the workflow triggered by the action in the `.github/workflows/hugo.yml` file.
-- Once the GitHub Actions are enabled, GitHub will build and publish the website as soon as the repository is updated.
-- If you would like to update the deployment action (for instance because it became outdated and fails to deploy the site), you can find the [most recent action on GitHub](https://github.com/actions/starter-workflows/blob/main/pages/hugo.yml). You can place this file directly in the `.github/workflows` folder to replace the old `hugo.yml` file—but make sure to set `push: branches` to `["main"]`.
+1. Place the file in `static/`, e.g. `static/my-paper.pdf`.
+2. It will be available at `https://stellabiderman.ai/my-paper.pdf`.
+3. Link to it from any Markdown page using the root-relative path: `[Download paper](/my-paper.pdf)`.
 
-## Usage
+### Add a new publication
 
-### Local development
+Each paper lives in its own folder under `content/papers/`:
 
-Navigate to the website directory (`cd`) and run in the terminal:
+```
+content/papers/
+└── my-paper/
+    ├── index.md        ← metadata + abstract + citation
+    └── my-paper.pdf    ← (optional) local copy of the paper
+```
+
+**Steps:**
+
+1. Create a folder: `content/papers/my-paper/`
+2. Copy `archetypes/paper.md` into the folder and rename it `index.md`.
+3. Fill in the front-matter fields (`title`, `date`, `author`, `description`, `summary`, `tags`) and replace the placeholder body text with your abstract and citation.
+4. If you want to host the PDF yourself, place it in the same folder and update the download link in `index.md`. Otherwise link directly to arXiv/DOI.
+
+Example front-matter for a new paper:
+
+```yaml
+---
+title: "My New Paper"
+date: 2024-11-01
+tags: ["large language models", "evaluation"]
+author: ["Stella Biderman", "Co-Author Name"]
+description: "One-sentence description for search engines."
+summary: "Two-sentence summary shown on the Publications list page."
+editPost:
+    URL: "https://arxiv.org/abs/XXXX.XXXXX"
+    Text: "arXiv"
+---
+```
+
+### Add a new talk
+
+Talks are listed under `content/talks/`. Create a new Markdown file there:
+
+```
+content/talks/my-talk.md
+```
+
+Use the front-matter format from an existing talk or the `archetypes/` templates as a starting point. The `date` field controls sort order on the Talks page.
+
+### Edit the Bio or Research pages
+
+These are single Markdown files:
+
+- `content/bio.md` — Bio page
+- `content/research.md` — Research overview page
+
+Open the file, edit the Markdown body, save, and push.
+
+### Update site-wide settings
+
+`config.yml` controls:
+
+- **Profile subtitle** (`params.profileMode.subtitle`) — the intro text on the home page
+- **Social icons** (`params.socialIcons`) — links in the icon row (CV, email, Google Scholar, GitHub, Twitter)
+- **Navigation menu** (`menu.main`) — top-nav and home-page button links
+- **Email address, base URL, site title**
+
+## Local development
+
+Install [Hugo](https://gohugo.io/installation/) (v0.147.2+), then run:
 
 ```bash
 hugo server
 ```
 
-The command builds the website on your machine and makes it available at http://localhost:1313, rebuilding automatically as you edit. You can modify the content of the repository and develop your website entirely on your machine.
+The site is available at <http://localhost:1313> and rebuilds automatically on every save.
 
-### Online deployment
+## Deployment
 
-Once your website is ready to be made public, commit your content and template changes and push them to the website repository on GitHub. It is convenient to use GitHub Desktop for this Git operation.
-
-On each push, the [GitHub Actions workflow](https://github.com/pmichaillat/hugo-website/actions/workflows/hugo.yml) invokes Hugo to generate the website and deploys the output to [GitHub Pages](https://github.com/pmichaillat/hugo-website/deployments/github-pages). During the workflow, Hugo processes your content, templates, and other project files and generates a static website.
-
-## Performance
-
-The website performs well on mobile and desktop devices. Here is an overview of the mobile performance from [PageSpeed Insights](https://pagespeed.web.dev/):
-
-<img width="470" alt="mobile" src="https://github.com/pmichaillat/hugo-website/assets/85443660/1488df3e-19bb-4f9f-8a86-11f361414d92">
-
-And here is an overview of the desktop performance:
-
-<img width="453" alt="desktop" src="https://github.com/pmichaillat/pmichaillat.github.io/assets/85443660/eff134d2-6097-4bc2-bfd7-4f5c18571789">
-
-## Software
-
-- The website is built with Hugo v0.147.2 via GitHub Actions.
-- The website was developed locally with Hugo v0.147.2 on macOS Sequoia.
-- The website was tested on the following browsers:
-  - Safari 18.4 on macOS Sequoia
-  - Mobile Safari on iOS 18
-- Other Hugo versions, operating systems, and web browsers may require minor adjustments. Please [report any issues](https://github.com/pmichaillat/hugo-website/issues) to help improve compatibility.
+Push any branch to GitHub. The GitHub Actions workflow (`.github/workflows/hugo.yml`) builds the site with Hugo and deploys it to GitHub Pages automatically.
 
 ## License
 
-This repository is licensed under the [MIT License](LICENSE.md).
-
-## Real-world implementations
-
-- [Pascal Michaillat's website](https://pascalmichaillat.org/) ([source code](https://github.com/pmichaillat/pmichaillat.github.io))
-- [Rosa van den Ende's website](https://rosavandenende.github.io) ([source code](https://github.com/rosavandenende/rosavandenende.github.io))
-- [Samia Kabir's website](https://samiakabir.com) ([source code](https://github.com/SamiaKabir/samiakabir.github.io))
-- [Dylan Laplace Mermoud's website](https://dylanlaplacemermoud.github.io) ([source code](https://github.com/DylanLaplaceMermoud/dylanlaplacemermoud.github.io))
-- [Maarten Goos's website](https://maartengoos.com) ([source code](https://github.com/MaartenGoos/website))
-- [Jun Wong's website](https://junwong.org) ([source code](https://github.com/junwong97/junwong97.github.io))
-- [Erling Rennemo Jellum's website](https://erlingrj.github.io) ([source code](https://github.com/erlingrj/erlingrj.github.io))
-- [Yangkeun Yun's website](https://yangkeunyun.github.io) ([source code](https://github.com/yangkeunyun/yangkeunyun.github.io))
-- [Lucas Warwar's website](https://lucaswarwar.github.io) ([source code](https://github.com/lucaswarwar/lucaswarwar.github.io))
-- [Franz Louis Cesista's website](https://leloykun.github.io) ([source code](https://github.com/leloykun/leloykun.github.io))
-- [Gabe Sekeres's website](https://gabesekeres.com) ([source code](https://github.com/gsekeres/hugo_site))
-- [Kevin Roice's website](https://kevroi.github.io) ([source code](https://github.com/kevroi/kevroi.github.io))
-- [Daniel Barbosa's website](https://dacbarbosa.github.io) ([source code](https://github.com/dacbarbosa/dacbarbosa.github.io))
-- [Wei Zhang's website](https://weizhang-econ.github.io) ([source code](https://github.com/weizhang-econ/weizhang-econ.github.io))
-- [Ben Hermann's website](http://benhermann.eu) ([source code](https://github.com/bhermann/bhermann.github.io))
-- [Franco Corona's website](http://fcorona.me) ([source code](https://github.com/exibios/exibios.github.io))
-- [Tom George's website](https://tomge.org) ([source code](https://github.com/TomGeorge1234/TomGeorge1234.github.io))
-- [Yucheng Zhou's website](https://yuchengzhou.com) ([source code](https://github.com/YuchengZ-Fin/YuchengZ-Fin.github.io))
-- [Rui Sousa's website](https://ruiagmsousa.github.io) ([source code](https://github.com/ruiagmsousa/ruiagmsousa.github.io))
-- [Stefano Sangiovanni's website](https://ste-sangiovanni.github.io) ([source code](https://github.com/ste-sangiovanni/ste-sangiovanni.github.io))
-- [Seth Watts's website](https://www.sethbwatts.com) ([source code](https://github.com/sBwatts/hugo-website))
-- [Louise Demoor's website](https://louisedemoor.github.io/website/) ([source code](https://github.com/louisedemoor/website))
-- [Giwon Bahg's website](https://giwonbahg.github.io) ([source code](https://github.com/giwonbahg/giwonbahg.github.io))
-- [Diego Araujo's website](https://daliego.github.io/portfolio-case-studies) ([source code](https://github.com/Daliego/portfolio-case-studies))
-- [Liam Powell's website](https://liampwl.com) ([source code](https://github.com/liampwl/liampwl.github.io))
-- [Anton Lundborg's website](https://www.arlundborg.com) ([source code](https://github.com/ARLundborg/web))
-- [Taeyoung Kim's website](https://tykim.me) ([source code](https://github.com/SangsChicom/tykim.github.io))
-- [Niladri Kal's website](https://niladrik.github.io) ([source code](https://github.com/niladrik/niladrik.github.io))
-- [Somjit Roy's website](https://roy-sr-007.github.io) ([source code](https://github.com/Roy-SR-007/roy-sr-007.github.io))
-- [Momchil Tomov's website](https://momchiltomov.com)
-- [Arthur Douillard's website](https://arthurdouillard.com)
-- [Benjamin Hattemer's website](https://benjaminhattemer.com)
-- [Kostas Bimpikis's website](https://stanford.edu/~kostasb/)
-- [Qiwei He's website](https://www.qiwei-he.com)
-- [Pierre Bardier's website](https://pierrebard.github.io/pierre-bardier/)
-- [Marek Wiewiórka's website](https://marekwiewiorka.org)
-- [Eran Shmuëli's website](https://eranshmueli.com)
-- [Bo Wang's website](https://bowang.finance)
-- [Muhammed Bulutay's website](https://muhammedbulutay.com)
-
-## Related resources
-
-- [latex-cv](https://github.com/pmichaillat/latex-cv) - This LaTeX template produces a minimalist academic CV, which you can post on your website.
-- [latex-presentation](https://github.com/pmichaillat/latex-presentation) - This LaTeX template produces minimalist research presentations, which you can post on your website.
-- [latex-paper](https://github.com/pmichaillat/latex-paper) - This LaTeX template produces minimalist research papers, which you can post on your website.
-- [latex-book](https://github.com/pmichaillat/latex-book) - This LaTeX template produces minimalist lecture notes and research monographs, which you can post on your website.
+[MIT License](LICENSE.md)
