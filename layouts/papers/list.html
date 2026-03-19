@@ -1,0 +1,67 @@
+{{- define "main" }}
+
+{{- if .Title }}
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+</header>
+{{- end }}
+
+{{- if .Content }}
+<div class="post-content">
+  {{- if not (.Param "disableAnchoredHeadings") }}
+  {{- partial "anchored_headings.html" .Content -}}
+  {{- else }}{{ .Content }}{{ end }}
+</div>
+{{- end }}
+
+<div class="post-content publications-list">
+{{- $csv := resources.Get "publications.csv" }}
+{{- $data := $csv | transform.Unmarshal }}
+{{- if $data }}
+
+{{- /* Collect unique years from data rows, skipping the header row (index 0) */}}
+{{- $years := slice }}
+{{- range $i, $row := $data }}
+  {{- if gt $i 0 }}
+    {{- $year := index $row 0 }}
+    {{- if not (in $years $year) }}
+      {{- $years = $years | append $year }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- /* Sort years descending so newest appear first */}}
+{{- $years = sort $years | collections.Reverse }}
+
+{{- range $year := $years }}
+<h2 class="publications-year">{{ $year }}</h2>
+<ul>
+  {{- range $i, $row := $data }}
+  {{- if and (gt $i 0) (eq (index $row 0) $year) }}
+  {{- $authors       := index $row 1 }}
+  {{- $title         := index $row 2 }}
+  {{- $venue         := index $row 3 }}
+  {{- $paper_url     := index $row 4 | strings.TrimSpace }}
+  {{- $artifacts_url := index $row 5 | strings.TrimSpace }}
+  {{- $code_url      := index $row 6 | strings.TrimSpace }}
+  {{- $models_url    := index $row 7 | strings.TrimSpace }}
+  {{- $slides_url    := index $row 8 | strings.TrimSpace }}
+  {{- $talk_url      := index $row 9 | strings.TrimSpace }}
+  <li>
+    {{ $authors | replaceRE `(Biderman)` `<strong>$1</strong>` | safeHTML }}. &#8220;{{ $title }}.&#8221; <em>{{ $venue }}</em>. {{ $year }}.
+    {{- if $paper_url }} [<a href="{{ $paper_url }}">Paper</a>]{{- end }}
+    {{- if $artifacts_url }} [<a href="{{ $artifacts_url }}">Artifacts</a>]{{- end }}
+    {{- if $code_url }} [<a href="{{ $code_url }}">Code</a>]{{- end }}
+    {{- if $models_url }} [<a href="{{ $models_url }}">Models</a>]{{- end }}
+    {{- if $slides_url }} [<a href="{{ $slides_url }}">Slides</a>]{{- end }}
+    {{- if $talk_url }} [<a href="{{ $talk_url }}">Talk</a>]{{- end }}
+  </li>
+  {{- end }}
+  {{- end }}
+</ul>
+{{- end }}
+
+{{- end }}
+</div>
+
+{{- end }}{{/* end main */}}
